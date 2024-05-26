@@ -1,6 +1,11 @@
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const multer = require('multer');
+const multerS3 = require('multer-s3');
+const s3 = require('./aws-config');
 
 const app = express();
 const port = process.env.PORT || 5000;
