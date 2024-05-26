@@ -1,5 +1,4 @@
 require('dotenv').config();
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -10,24 +9,21 @@ const s3 = require('./aws-config');
 const app = express();
 const port = process.env.PORT || 5000;
 
+// Middleware setup
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect('mongodb://localhost:27017/mydb', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const connection = mongoose.connection;
 connection.once('open', () => {
     console.log('MongoDB database connection established successfully');
 });
 
-/* const itemsRouter = require('./routes/items');
-app.use('/items', itemsRouter);
- */
-
 const upload = multer({
     storage: multerS3({
         s3: s3,
-        bucket: 'YOUR_BUCKET_NAME',
+        bucket: process.env.S3_BUCKET_NAME,
         acl: 'public-read',
         key: function (req, file, cb) {
             cb(null, Date.now().toString() + '-' + file.originalname);
@@ -35,8 +31,14 @@ const upload = multer({
     }),
 });
 
+// Define Mongoose model
 const Item = require('./models/item.model');
 
+// Define routes
+const itemsRouter = require('./routes/items');
+app.use('/items', itemsRouter);
+
+// Route to handle item addition
 app.post('/items/add', upload.single('image'), (req, res) => {
     const name = req.body.name;
     const description = req.body.description;
@@ -49,12 +51,7 @@ app.post('/items/add', upload.single('image'), (req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
-app.get('/items', (req, res) => {
-    Item.find()
-        .then(items => res.json(items))
-        .catch(err => res.status(400).json('Error: ' + err));
-});
-
+// Start the server
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });
