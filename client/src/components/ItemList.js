@@ -19,7 +19,10 @@ const ItemList = () => {
             <h3>Item List</h3>
             <ul>
                 {items.map(item => (
-                    <li key={item._id}>{item.name}: {item.description}</li>
+                    <li key={item._id}>
+                        <p>{item.name}: {item.description}</p>
+                        <img src={item.imageUrl} alt={item.name} style={{ width: '200px' }} />
+                    </li>
                 ))}
             </ul>
         </div>
