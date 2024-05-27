@@ -10,18 +10,19 @@ const ItemList = () => {
                 setItems(response.data);
             })
             .catch((error) => {
-                console.log(error);
+                console.error(error);
             });
     }, []);
 
     return (
         <div>
             <h3>Item List</h3>
-            <ul>
+            <ul className="list-group">
                 {items.map(item => (
-                    <li key={item._id}>
-                        <p>{item.name}: {item.description}</p>
-                        <img src={item.imageUrl} alt={item.name} style={{ width: '200px' }} />
+                    <li key={item._id} className="list-group-item">
+                        <h5>{item.name}</h5>
+                        <p>{item.description}</p>
+                        {item.imageUrl && <img src={item.imageUrl} alt={item.name} style={{ width: '100px' }} />}
                     </li>
                 ))}
             </ul>

@@ -15,48 +15,56 @@ const AddItem = () => {
         formData.append('image', image);
 
         axios.post('http://localhost:5000/items/add', formData)
-            .then(res => console.log(res.data));
-
-        setName('');
-        setDescription('');
-        setImage(null);
+            .then(res => {
+                console.log(res.data);
+                setName('');
+                setDescription('');
+                setImage(null);
+            })
+            .catch(err => {
+                console.error(err);
+            });
     };
 
     return (
         <div>
             <h3>Add New Item</h3>
             <form onSubmit={onSubmit}>
-                <div>
+                <div className="form-group">
                     <label>Name: </label>
                     <input
                         type="text"
-                        required
+                        className="form-control"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        required
                     />
                 </div>
-                <div>
+                <div className="form-group">
                     <label>Description: </label>
                     <input
                         type="text"
-                        required
+                        className="form-control"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
+                        required
                     />
                 </div>
-                <div>
+                <div className="form-group">
                     <label>Image: </label>
                     <input
                         type="file"
+                        className="form-control"
                         onChange={(e) => setImage(e.target.files[0])}
+                        required
                     />
                 </div>
-                <div>
-                    <input type="submit" value="Add Item" />
+                <div className="form-group">
+                    <input type="submit" value="Add Item" className="btn btn-primary" />
                 </div>
             </form>
         </div>
     );
-    };
+};
 
-    export default AddItem;
+export default AddItem;
