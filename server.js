@@ -6,8 +6,7 @@ const multer = require('multer');
 const { S3Client } = require('@aws-sdk/client-s3');
 const { Upload } = require('@aws-sdk/lib-storage');
 const s3 = require('./aws-config');
-
-const Item = require('./models/item.model');  // Import the Item model
+const Item = require('./models/item.model');  
 
 const app = express();
 const port = process.env.PORT || 5000;
