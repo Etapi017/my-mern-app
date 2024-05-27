@@ -34,10 +34,6 @@ const upload = multer({
 // Define Mongoose model
 const Item = require('./models/item.model');
 
-// Define routes
-const itemsRouter = require('./routes/items');
-app.use('/items', itemsRouter);
-
 // Route to handle item addition
 app.post('/items/add', upload.single('image'), (req, res) => {
     const name = req.body.name;
@@ -51,7 +47,21 @@ app.post('/items/add', upload.single('image'), (req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
+// Route to get all items
+app.get('/items', (req, res) => {
+    Item.find()
+        .then(items => res.json(items))
+        .catch(err => res.status(400).json('Error: ' + err));
+});
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });
+
+/* // Route to get all items
+app.get('/items', (req, res) => {
+    Item.find()
+        .then(items => res.json(items))
+        .catch(err => res.status(400).json('Error: ' + err));
+}); */
