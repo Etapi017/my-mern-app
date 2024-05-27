@@ -3,7 +3,7 @@ This app uses MongoDB and AWS to store data and profile pictures.
 
 ## Front end
 In the project directory my-mern-app run:
-### `npm start`
+### `node server.js`
 Below is the dependency list.
 ### `Dependencies List`
 aws-sdk
@@ -25,3 +25,23 @@ multer-s3
 multer
 
 react-router-dom
+
+## Back end
+In the project directory my-mern-app\client run:
+
+### `npm start`
+
+Below is the dependency list.
+### `Dependencies List`
+
+bootstrap
+
+react-dom
+
+react-router-dom
+
+react-scripts
+
+react
+
+web-vitals
