@@ -3,6 +3,13 @@ This app uses MongoDB and AWS to store data and profile pictures.
 To download all require dependencies run:
 ### `npm install`
 
+To submit enter a name and upload a picture go to:
+### `http://localhost:3000/add`
+
+To view a list of your items go to:
+### `http://localhost:3000`
+
+
 ## Front end
 In the project directory my-mern-app run:
 ### `node server.js`
