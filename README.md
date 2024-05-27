@@ -3,9 +3,9 @@ This app uses MongoDB and AWS to store data and profile pictures.
 
 ## Front end
 In the project directory my-mern-app run:
-### 'npm start'
+### `npm start`
 Below is the dependency list.
-### 'Dependencies List'
+### `Dependencies List`
 aws-sdk
 
 axios
