@@ -1,5 +1,7 @@
 # my-mern-app
 This app uses MongoDB and AWS to store data and profile pictures.
+To download all require dependencies run:
+### `npm install`
 
 ## Front end
 In the project directory my-mern-app run:
