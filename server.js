@@ -3,8 +3,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const multer = require('multer');
-const multerS3 = require('multer-s3');
+const { S3Client } = require('@aws-sdk/client-s3');
+const { Upload } = require('@aws-sdk/lib-storage');
 const s3 = require('./aws-config');
+
+const Item = require('./models/item.model');  // Import the Item model
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -21,47 +24,46 @@ connection.once('open', () => {
 });
 
 const upload = multer({
-    storage: multerS3({
-        s3: s3,
-        bucket: process.env.S3_BUCKET_NAME,
-        acl: 'public-read',
-        key: function (req, file, cb) {
-            cb(null, Date.now().toString() + '-' + file.originalname);
-        },
-    }),
+    storage: multer.memoryStorage(),
 });
 
-// Define Mongoose model
-const Item = require('./models/item.model');
-
-// Route to handle item addition
-app.post('/items/add', upload.single('image'), (req, res) => {
+app.post('/items/add', upload.single('image'), async (req, res) => {
     const name = req.body.name;
     const description = req.body.description;
-    const imageUrl = req.file.location;
+    const image = req.file;
 
-    const newItem = new Item({ name, description, imageUrl });
+    const uploadParams = {
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key: Date.now().toString() + '-' + image.originalname,
+        Body: image.buffer,
+        ContentType: image.mimetype,
+    };
 
-    newItem.save()
-        .then(() => res.json('Item added!'))
-        .catch(err => res.status(400).json('Error: ' + err));
+    try {
+        const upload = new Upload({
+            client: s3,
+            params: uploadParams,
+        });
+        const data = await upload.done();
+        const imageUrl = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${uploadParams.Key}`;
+
+        const newItem = new Item({ name, description, imageUrl });
+
+        newItem.save()
+            .then(() => res.json('Item added!'))
+            .catch(err => res.status(400).json('Error: ' + err));
+    } catch (err) {
+        console.error(err);
+        res.status(500).json('Error uploading image');
+    }
 });
 
-// Route to get all items
 app.get('/items', (req, res) => {
     Item.find()
         .then(items => res.json(items))
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
-// Start the server
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });
-
-/* // Route to get all items
-app.get('/items', (req, res) => {
-    Item.find()
-        .then(items => res.json(items))
-        .catch(err => res.status(400).json('Error: ' + err));
-}); */
