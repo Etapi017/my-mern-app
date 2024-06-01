@@ -16,6 +16,8 @@ To access the admin actions page go to:
 ### `http://localhost:3000/admin`
 Use this page to change passwords, update users, delete users, and initialize the database.
 
+### Enter Info and Pictures
+
 To enter a name and upload a picture go to:
 ### `http://localhost:3000/add`
 
