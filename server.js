@@ -6,7 +6,9 @@ const multer = require('multer');
 const { S3Client } = require('@aws-sdk/client-s3');
 const { Upload } = require('@aws-sdk/lib-storage');
 const s3 = require('./aws-config');
-const Item = require('./models/item.model');  
+const Item = require('./models/item.model');  // Import the Item model
+const authRouter = require('./routes/auth');  // Import auth routes
+const adminRouter = require('./routes/admin');  // Import admin routes
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -62,6 +64,9 @@ app.get('/items', (req, res) => {
         .then(items => res.json(items))
         .catch(err => res.status(400).json('Error: ' + err));
 });
+
+app.use('/auth', authRouter);  // Use auth routes
+app.use('/admin', adminRouter);  // Use admin routes
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
